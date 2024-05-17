@@ -1,16 +1,25 @@
 import { useContext } from "react";
 import Post from "./Post";
 import { PostList as PostListData } from "../store/post-list-store";
+import WelcomeMsg from "./WelcomeMsg";
 
 const PostList = () => {
-  const { postList } = useContext(PostListData);
+  const { postList, addInitialPosts } = useContext(PostListData);
+  const handleGetPostsClick = () => {
+    console.log("onGetPostsClick");
+    fetch("https://dummyjson.com/posts")
+      .then((res) => res.json())
+      .then(data => addInitialPosts(data.posts));
+  };
 
   return (
     <>
+      {postList.length === 0 && (
+        <WelcomeMsg onGetPostsClick={handleGetPostsClick} />
+      )}
       {postList.map((post) => (
-        <Post key={post.id} post={post}/>
+        <Post key={post.id} post={post} />
       ))}
-     
     </>
   );
 };
